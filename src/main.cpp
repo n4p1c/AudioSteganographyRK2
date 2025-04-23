@@ -20,47 +20,47 @@ public:
         QVBoxLayout *layout = new QVBoxLayout(centralWidget);
 
         textInput = new QLineEdit(this);
-        textInput->setPlaceholderText("Enter text to hide (or leave empty for file)");
+        textInput->setPlaceholderText("Введите текст для скрытия (или оставьте пустым для файла)");
         layout->addWidget(textInput);
 
-        QPushButton *selectAudioButton = new QPushButton("Select Audio File", this);
+        QPushButton *selectAudioButton = new QPushButton("Выбрать аудиофайл", this);
         connect(selectAudioButton, &QPushButton::clicked, this, &SteganographyApp::selectAudioFile);
         layout->addWidget(selectAudioButton);
 
-        QPushButton *selectFileButton = new QPushButton("Select File to Hide", this);
+        QPushButton *selectFileButton = new QPushButton("Выбрать файл для скрытия", this);
         connect(selectFileButton, &QPushButton::clicked, this, &SteganographyApp::selectInputFile);
         layout->addWidget(selectFileButton);
 
-        QPushButton *encryptButton = new QPushButton("Hide Data", this);
+        QPushButton *encryptButton = new QPushButton("Скрыть данные", this);
         connect(encryptButton, &QPushButton::clicked, this, &SteganographyApp::encryptData);
         layout->addWidget(encryptButton);
 
-        QPushButton *decryptButton = new QPushButton("Extract Data", this);
+        QPushButton *decryptButton = new QPushButton("Извлечь данные", this);
         connect(decryptButton, &QPushButton::clicked, this, &SteganographyApp::decryptData);
         layout->addWidget(decryptButton);
 
-        setWindowTitle("Audio Steganography");
+        setWindowTitle("Аудио Стеганография");
         resize(400, 250);
     }
 
 private slots:
     void selectAudioFile() {
-        audioFilePath = QFileDialog::getOpenFileName(this, "Select Audio File", "", "Audio Files (*.wav)");
+        audioFilePath = QFileDialog::getOpenFileName(this, "Выбрать аудиофайл", "", "Аудиофайлы (*.wav)");
         if (!audioFilePath.isEmpty()) {
-            QMessageBox::information(this, "Success", "Audio file selected: " + audioFilePath);
+            QMessageBox::information(this, "Успех", "Аудиофайл выбран: " + audioFilePath);
         }
     }
 
     void selectInputFile() {
-        inputFilePath = QFileDialog::getOpenFileName(this, "Select File to Hide", "", "All Files (*)");
+        inputFilePath = QFileDialog::getOpenFileName(this, "Выбрать файл для скрытия", "", "Все файлы (*)");
         if (!inputFilePath.isEmpty()) {
-            QMessageBox::information(this, "Success", "File selected: " + inputFilePath);
+            QMessageBox::information(this, "Успех", "Файл выбран: " + inputFilePath);
         }
     }
 
     void encryptData() {
         if (audioFilePath.isEmpty()) {
-            QMessageBox::warning(this, "Error", "Please select an audio file first!");
+            QMessageBox::warning(this, "Ошибка", "Сначала выберите аудиофайл!");
             return;
         }
 
@@ -75,7 +75,7 @@ private slots:
         } else if (!inputFilePath.isEmpty()) {
             QFile file(inputFilePath);
             if (!file.open(QIODevice::ReadOnly)) {
-                QMessageBox::warning(this, "Error", "Unable to open file for hiding!");
+                QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл для скрытия!");
                 return;
             }
             dataToHide = file.readAll();
@@ -84,7 +84,7 @@ private slots:
             QFileInfo fileInfo(inputFilePath);
             fileName = fileInfo.fileName();
         } else {
-            QMessageBox::warning(this, "Error", "Enter text or select a file to hide!");
+            QMessageBox::warning(this, "Ошибка", "Введите текст или выберите файл для скрытия!");
             return;
         }
 
@@ -92,7 +92,7 @@ private slots:
         sfinfo.format = 0;
         SNDFILE *infile = sf_open(audioFilePath.toStdString().c_str(), SFM_READ, &sfinfo);
         if (!infile) {
-            QMessageBox::warning(this, "Error", "Unable to open audio file!");
+            QMessageBox::warning(this, "Ошибка", "Не удалось открыть аудиофайл!");
             return;
         }
 
@@ -108,7 +108,7 @@ private slots:
         size_t maxBits = audioData.size();
         size_t requiredBits = (dataToHide.size() + fileNameBytes.size() + 8) * 8 + 64;
         if (requiredBits > maxBits) {
-            QMessageBox::warning(this, "Error", "Audio file is too small for the data!");
+            QMessageBox::warning(this, "Ошибка", "Аудиофайл слишком мал для данных!");
             return;
         }
 
@@ -140,26 +140,26 @@ private slots:
             }
         }
 
-        QString outputPath = QFileDialog::getSaveFileName(this, "Save Audio File", "", "Audio Files (*.wav)");
+        QString outputPath = QFileDialog::getSaveFileName(this, "Сохранить аудиофайл", "", "Аудиофайлы (*.wav)");
         if (outputPath.isEmpty()) {
-            QMessageBox::warning(this, "Error", "No save path selected!");
+            QMessageBox::warning(this, "Ошибка", "Не выбран путь для сохранения!");
             return;
         }
 
         SNDFILE *outfile = sf_open(outputPath.toStdString().c_str(), SFM_WRITE, &sfinfo);
         if (!outfile) {
-            QMessageBox::warning(this, "Error", "Unable to save audio file!");
+            QMessageBox::warning(this, "Ошибка", "Не удалось сохранить аудиофайл!");
             return;
         }
         sf_write_short(outfile, audioData.data(), audioData.size());
         sf_close(outfile);
 
-        QMessageBox::information(this, "Success", "Data hidden in " + outputPath);
+        QMessageBox::information(this, "Успех", "Данные скрыты в " + outputPath);
     }
 
     void decryptData() {
         if (audioFilePath.isEmpty()) {
-            QMessageBox::warning(this, "Error", "Please select an audio file first!");
+            QMessageBox::warning(this, "Ошибка", "Сначала выберите аудиофайл!");
             return;
         }
 
@@ -167,7 +167,7 @@ private slots:
         sfinfo.format = 0;
         SNDFILE *infile = sf_open(audioFilePath.toStdString().c_str(), SFM_READ, &sfinfo);
         if (!infile) {
-            QMessageBox::warning(this, "Error", "Unable to open audio file!");
+            QMessageBox::warning(this, "Ошибка", "Не удалось открыть аудиофайл!");
             return;
         }
 
@@ -206,7 +206,7 @@ private slots:
         QString fileName = QString::fromUtf8(fileNameBytes).trimmed();
 
         if (dataLength * 8 + bitIndex > audioData.size()) {
-            QMessageBox::warning(this, "Error", "Invalid data in audio file!");
+            QMessageBox::warning(this, "Ошибка", "Некорректные данные в аудиофайле!");
             return;
         }
 
@@ -222,23 +222,23 @@ private slots:
 
         if (dataType == 0) {
             QString text = QString::fromUtf8(extractedData);
-            QMessageBox::information(this, "Extracted Text", "Text: " + text);
+            QMessageBox::information(this, "Извлеченный текст", "Текст: " + text);
         } else {
-            QString outputPath = QFileDialog::getSaveFileName(this, "Save Extracted File", fileName, "All Files (*)");
+            QString outputPath = QFileDialog::getSaveFileName(this, "Сохранить извлеченный файл", fileName, "Все файлы (*)");
             if (outputPath.isEmpty()) {
-                QMessageBox::warning(this, "Error", "No save path selected!");
+                QMessageBox::warning(this, "Ошибка", "Не выбран путь для сохранения!");
                 return;
             }
 
             QFile file(outputPath);
             if (!file.open(QIODevice::WriteOnly)) {
-                QMessageBox::warning(this, "Error", "Unable to save file!");
+                QMessageBox::warning(this, "Ошибка", "Не удалось сохранить файл!");
                 return;
             }
             file.write(extractedData);
             file.close();
 
-            QMessageBox::information(this, "Success", "File saved: " + outputPath);
+            QMessageBox::information(this, "Успех", "Файл сохранен: " + outputPath);
         }
     }
 
