@@ -42,7 +42,7 @@
 ### 1. Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/<ваш-username>/AudioSteganography.git
+git clone https://github.com/n4p1c/AudioSteganography.git
 cd AudioSteganography
 ```
 
