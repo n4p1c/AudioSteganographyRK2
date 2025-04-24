@@ -42,8 +42,8 @@
 ### 1. Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/n4p1c/AudioSteganography.git
-cd AudioSteganography
+git clone https://github.com/n4p1c/AudioSteganographyRK2.git
+cd AudioSteganographyRK2
 ```
 
 ### 2. Сборка проекта
